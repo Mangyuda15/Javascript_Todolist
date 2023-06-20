@@ -22,6 +22,13 @@ btnSave.addEventListener("click", function () {
     listName.focus();
 
     // Penghapus Item
+
+/* Permasalahanya Adalah Ketika Saya Menghapus Suatu Data / Item Yang Saya Sudah Inputkan Ketika Saya Klik Tombol Tanda X
+    Itu kan Sudah Mau Terhapus Tetapi Ketika Saya Refresh Browsernya Data Yang Saya Hapus Tadi Itu Kembali Muncul Padahal Kodenya 
+    Itu Sudah Benar Letak Sama Penulisannya Tapi Tetap Aja Muncul Ngak Mau di Hapus Sudah Saya Cari - Cari Tapi Tetap Aja Tidak Mau Berfungsi
+    Tombol Delete Atau Hapusnya Kurang Lebih Hanya Seperti Itu Yang Bisa Saya Jelaskan Semoga Bisa dimengerti. Mohon dibantu Sekian dab Terima Kasih 
+    */
+    
     let btnHapus = document.querySelectorAll(".btn-hapus");
     for (let x = 0; x < btnHapus.length; x++) {
       let hapus = btnHapus[x];
