@@ -5,8 +5,7 @@ let btnSave = document.getElementById("btn-save");
 let list_item = [];
 let listHTML = "";
 
-// Menyimpan Data / Item
-
+// Menyimpan Data Atau Item
 btnSave.addEventListener("click", function () {
   if (listName.value === "") {
     alert("Nama Harus diisi! Tidak Boleh Kosong!!!");
@@ -70,7 +69,7 @@ function manageLocalStorage(action, item) {
   localStorage.setItem("TO_DO_ITEMS", JSON.stringify(list_item));
 }
 
-// Kode untuk memperbarui daftar item setelah halaman dimuat
+// Kode Untuk Memperbarui Daftar Item Setelah Halaman Dimuat
 window.addEventListener("load", function () {
   list_item = JSON.parse(localStorage.getItem("TO_DO_ITEMS")) || [];
   listHTML = "";
@@ -92,7 +91,7 @@ window.addEventListener("load", function () {
     hapus.addEventListener("click", function () {
       let itemText = hapus.parentElement.querySelector("span").textContent;
       hapus.parentElement.remove();
-      manageLocalStorage("HAPUS", itemText); // Menghapus data berdasarkan teks item
+      manageLocalStorage("HAPUS", itemText); // Menghapus Data Berdasarkan Teks Item
     });
   }
 });
