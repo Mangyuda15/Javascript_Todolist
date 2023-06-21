@@ -1,18 +1,22 @@
+//Deklarasi Variabel
+
 let listName = document.getElementById("list-name");
 let btnSave = document.getElementById("btn-save");
 let list_item = [];
-listHTML = "";
+let listHTML = "";
 
 // Menyimpan Data / Item
+
 btnSave.addEventListener("click", function () {
-  if (listName.value == "") {
+  if (listName.value === "") {
     alert("Nama Harus diisi! Tidak Boleh Kosong!!!");
   } else {
     let listContainer = document.querySelector(".list-group");
-    let listHTML = listContainer.innerHTML;
-    listHTML += `<li class="list-group-item d-flex justify-content-between">
-                 <span>${listName.value}</span>
-                 <button class="badge border-0 bg-danger btn-hapus">X</button></li>`;
+    let listItemHTML = `<li class="list-group-item d-flex justify-content-between">
+                        <span>${listName.value}</span>
+                        <button class="badge border-0 bg-danger btn-hapus">X</button></li>`;
+
+    listHTML += listItemHTML;
 
     // Menambahkan Item Baru Ke Local Storage
     manageLocalStorage("TAMBAH", listName.value);
@@ -21,44 +25,36 @@ btnSave.addEventListener("click", function () {
     listName.value = "";
     listName.focus();
 
-    // Penghapus Item
-
-/* Permasalahanya Adalah Ketika Saya Menghapus Suatu Data / Item Yang Saya Sudah Inputkan Ketika Saya Klik Tombol Tanda X
-    Itu kan Sudah Mau Terhapus Tetapi Ketika Saya Refresh Browsernya Data Yang Saya Hapus Tadi Itu Kembali Muncul Padahal Kodenya 
-    Itu Sudah Benar Letak Sama Penulisannya Tapi Tetap Aja Muncul Ngak Mau di Hapus Sudah Saya Cari - Cari Tapi Tetap Aja Tidak Mau Berfungsi
-    Tombol Delete Atau Hapusnya Kurang Lebih Hanya Seperti Itu Yang Bisa Saya Jelaskan Semoga Bisa dimengerti. Mohon dibantu Sekian dab Terima Kasih 
-    */
-    
+    // Menghapus Item
     let btnHapus = document.querySelectorAll(".btn-hapus");
     for (let x = 0; x < btnHapus.length; x++) {
       let hapus = btnHapus[x];
       hapus.addEventListener("click", function () {
         let itemText = hapus.parentElement.querySelector("span").textContent;
-        let itemId = hapus.parentElement.dataset.itemId; // Menyimpan nilai ID item pada atribut data
-
         hapus.parentElement.remove();
-        manageLocalStorage("HAPUS", itemId); // Menggunakan nilai ID item untuk menghapus data
-
-        console.log("Item dihapus:", itemText);
+        manageLocalStorage("HAPUS", itemText); // Menghapus data berdasarkan teks item
       });
     }
   }
 });
 
-// Local Stroge
+// Local Storage
 
-if (localStorage.getItem("TO DO ITEMS")) {
-  let itemLocalStorage = JSON.parse(localStorage.getItem("TO DO ITEMS"));
+if (localStorage.getItem("TO_DO_ITEMS")) {
+  let itemLocalStorage = JSON.parse(localStorage.getItem("TO_DO_ITEMS"));
 
   itemLocalStorage.forEach(function (itemTodo) {
-    listHTML += `<li class="list-group-item d-flex justify-content-between">
-                 <span>${itemTodo}</span> 
-                 <button class="badge border-0 bg-danger btn-hapus">X</button></li>`;
+    let listItemHTML = `<li class="list-group-item d-flex justify-content-between">
+                        <span>${itemTodo}</span>
+                        <button class="badge border-0 bg-danger btn-hapus">X</button></li>`;
+
+    listHTML += listItemHTML;
 
     let listContainer = document.querySelector(".list-group");
     listContainer.innerHTML = listHTML;
   });
 }
+
 function manageLocalStorage(action, item) {
   switch (action) {
     case "TAMBAH":
@@ -66,42 +62,37 @@ function manageLocalStorage(action, item) {
       break;
     case "HAPUS":
       list_item = list_item.filter(function (todoItem) {
-        return todoItem != item;
+        return todoItem !== item;
       });
       break;
   }
 
-  localStorage.setItem("TO DO ITEMS", JSON.stringify(list_item));
+  localStorage.setItem("TO_DO_ITEMS", JSON.stringify(list_item));
 }
 
-// Mengatur Responsive
-window.addEventListener("resize", function () {
-  // Code untuk mengubah tampilan elemen-elemen HTML
-});
+// Kode untuk memperbarui daftar item setelah halaman dimuat
+window.addEventListener("load", function () {
+  list_item = JSON.parse(localStorage.getItem("TO_DO_ITEMS")) || [];
+  listHTML = "";
 
-window.addEventListener("resize", function () {
-  var windowWidth = window.innerWidth;
+  list_item.forEach(function (itemTodo) {
+    let listItemHTML = `<li class="list-group-item d-flex justify-content-between">
+                        <span>${itemTodo}</span>
+                        <button class="badge border-0 bg-danger btn-hapus">X</button></li>`;
 
-  // Code untuk mengubah tampilan elemen-elemen HTML berdasarkan windowWidth
-});
+    listHTML += listItemHTML;
+  });
 
-function isLocalStorageSupported() {
-  try {
-    const testKey = "test";
-    localStorage.setItem(testKey, testKey);
-    localStorage.removeItem(testKey);
-    return true;
-  } catch (e) {
-    return false;
+  let listContainer = document.querySelector(".list-group");
+  listContainer.innerHTML = listHTML;
+
+  let btnHapus = document.querySelectorAll(".btn-hapus");
+  for (let x = 0; x < btnHapus.length; x++) {
+    let hapus = btnHapus[x];
+    hapus.addEventListener("click", function () {
+      let itemText = hapus.parentElement.querySelector("span").textContent;
+      hapus.parentElement.remove();
+      manageLocalStorage("HAPUS", itemText); // Menghapus data berdasarkan teks item
+    });
   }
-}
-
-if (isLocalStorageSupported()) {
-  // Penyimpanan lokal (localStorage) didukung
-  // Anda dapat menggunakan localStorage di sini
-  // contoh: localStorage.setItem('key', 'value');
-} else {
-  // Penyimpanan lokal (localStorage) tidak didukung atau diblokir
-  // Berikan pesan atau tindakan alternatif
-  console.log("Penyimpanan lokal (localStorage) tidak didukung atau diblokir");
-}
+});
